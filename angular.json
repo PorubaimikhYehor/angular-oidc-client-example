@@ -1,6 +1,6 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
-  "version": 1, 
+  "version": 1,
   "newProjectRoot": "projects",
   "projects": {
     "e-angular-oidc-client-example": {
@@ -119,6 +119,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "e-angular-oidc-client-example"
+    }
+  },
+  "defaultProject": "e-angular-oidc-client-example",
+  "cli": {
+    "analytics": "2e895207-12f6-4bd1-a308-d543783b2caa"
+  }
 }
