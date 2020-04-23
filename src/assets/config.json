@@ -1,0 +1,8 @@
+{
+  "authority": "https://localhost:5002",
+  "client_id": "spa",
+  "redirect_uri": "http://10.34.0.131:9991/callback.html",
+  "response_type": "code",
+  "scope": "openid profile api1",
+  "post_logout_redirect_uri": "http://10.34.0.131:9991/index.html"
+}

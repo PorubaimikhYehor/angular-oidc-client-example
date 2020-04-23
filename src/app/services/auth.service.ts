@@ -1,42 +1,35 @@
 import { Injectable } from '@angular/core';
 import { UserManager, UserManagerSettings, User } from 'oidc-client';
+import { HttpClient } from '@angular/common/http';
 
-export function getClientSettings(): UserManagerSettings {
-  return {
-    authority: "http://localhost:5000",
-    client_id: "spa",
-    redirect_uri: "http://localhost:5003/callback.html",
-    response_type: "code",
-    scope: "openid profile api1",
-    post_logout_redirect_uri: "http://localhost:5003/index.html",
-    response_mode: "query",
-
-    // authority: 'http://localhost:5000/',
-    // client_id: 'js',
-    // redirect_uri: 'http://localhost:5003/callback',
-    // post_logout_redirect_uri: 'http://localhost:5003/',
-    // response_type: "code",
-    // scope: "openid profile api1",
-    // filterProtocolClaims: true,
-    // loadUserInfo: true
-  };
-}
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
 
-  private manager = new UserManager(getClientSettings());
+  private manager: UserManager;
   private user: User = null;
 
-  constructor() {
-
-    this.manager.getUser().then(user => {
-      this.user = user;
-    });
-
+  constructor(private http: HttpClient) {
+    this.load()
+      .then((res: UserManagerSettings) => {
+        console.log(res);
+        this.manager = new UserManager(res);
+        return this.manager.getUser()
+      })
+      .then(user => {
+        this.user = user;
+      });
   }
+
+  load() {
+    const jsonFile = `assets/config.json`;
+    return this.http.get(jsonFile).toPromise()
+      // .then(res => console.log(res))
+      .catch(rej => console.log(rej));
+  }
+
   getUser(): User {
     return this.user
   }
@@ -55,9 +48,16 @@ export class AuthService {
   }
 
   completeAuthentication(): Promise<void> {
-    return this.manager.signinRedirectCallback().then(user => {
-      this.user = user;
-    });
+    return this.load()
+      .then((res: UserManagerSettings) => {
+        console.log(res);
+        this.manager = new UserManager(res);
+        return this.manager.signinRedirectCallback()
+      })
+      .then(user => {
+        this.user = user;
+      });
+
   }
   logout() {
     this.manager.signoutRedirect()
